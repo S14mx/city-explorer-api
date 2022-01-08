@@ -11,13 +11,18 @@ app.use(cors());
 const PORT = process.env.PORT || 3002;
 
 class Forecast {
-  constructor(day) {
+  constructor(day, lat, lon) {
     this.date = day.valid_date;
     this.desc = day.weather.description;
+    this.lat = lat;
+    this.lon = lon;
   }
 }
 
 const truncate = (fullString) => {
+  if (!fullString) return;
+
+  fullString = fullString.toString();
   const dotIndex = fullString.indexOf('.');
   return dotIndex ? fullString.slice(0, dotIndex + 3) : fullString;
 };
@@ -32,14 +37,13 @@ app.get('/weather', (req, res) => {
   }
 
   const result = weatherData.find(obj => truncate(obj.lat) === truncate(lat) && truncate(obj.lon) === truncate(lon));
-  console.log(result);
   if (result) {
-    const weatherArr = result.data.map(day => new Forecast(day));
+    const weatherArr = result.data.map(day => new Forecast(day, lat, lon));
     res.status(200).send(weatherArr);
 
   } else {
 
-    res.status(503).send('city not found');
+    res.status(204).send('city not found');
   }
 });
 
