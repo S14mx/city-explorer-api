@@ -1,15 +1,7 @@
 'use strict';
 
 const axios = require('axios');
-
-class Forecast {
-  constructor(day, lat, lon) {
-    this.date = day.valid_date;
-    this.desc = day.weather.description;
-    this.lat = lat;
-    this.lon = lon;
-  }
-}
+const Forecast = require('../classes/Forecast.js');
 
 const getWeather = async (req, res) => {
   try {
